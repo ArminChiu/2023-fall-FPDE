@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>乒乓对打练习</title>
+    <style>
+        #frame {
+            position: relative; 
+            width: 600px;
+            height: 400px;
+            margin: 0 auto;
+            overflow: hidden;
+            background-image: url(table.bmp);
+        }
+        #frame::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #000;
+            box-sizing: border-box;
+        }
+        #ball {
+            position: absolute;
+            top: 200px;
+            left: 300px;
+            width: 20px;
+            height: 20px;
+            background-color: coral;
+            border-radius: 50%;
+        }
+        #racket {
+            position: absolute;
+            bottom: 0;
+            left: 250px;
+            width: 75px;
+            height: 10px;
+            background-color: #f00;
+        }
+        #opponent-racket {
+            position: absolute;
+            top: 0;
+            left: 250px;
+            width: 75px;
+            height: 10px;
+            background-color:#000;
+        }
+        #score {
+            margin-top: 10px;
+        }
+        body {
+            text-align: center;
+            background-image: url(bg.gif);
+            background-size: cover;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body>
+    <div id="before">         
+        <h1 style="color:#f00">🏓乒乓对打练习🏓</h1>
+        <h4>作为UCAS最强的乒乓球手,你曾以为自己天下无敌,直到你碰见了……</h4>
+        <img src="MaLong.webp" alt="帝国の破壞龍！" width="500">
+        <h2><i style="color:crimson">🐉帝国の破壞龍！🐉</i></h2>
+        <h3>龙队决定给你上上强度，快来应战吧！</h3>
+    </div>
+    <div id="frame">
+        <div id="ball"></div>
+        <div id="racket"></div>
+        <div id="opponent-racket"></div>
+    </div>
+    <div id="score">拍数: <span id="score-value">0</span> 拍</div><br>
+    <div id="buttons">
+        <button id="start-button">快速发球</button>
+        <button id="restart-button">耻辱捡球</button>
+    </div>
+    <div id="hit">
+        <audio id="audio">
+            <source src="hit.mp3" type="audio/mpeg">
+        </audio>
+        <audio id ="audio2">
+            <source src="hit2.mp3" type="audio/mpeg">
+        </audio>
+        <audio id ="chicken">
+            <source src="chicken.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+    <div id="after">
+        <h2><i style="color:deeppink">#致谢</h2>
+        <h5>龙队帅照取自视频https://www.ixigua.com/6990728721065837086</h5>
+        <h5>网页背景取自设计https://www.zcool.com.cn/work/ZMjI3NzI3NDA=.html</h5>
+        <h5>灵感源于小时候玩的冰球游戏，作者将其饰以乒乓球元素</h5>
+        <h5>编程过程中遇到的诸多难题，感谢CSDN、菜鸟教程上的解决方案</h5>
+    </div>
+
+    <script>
+        var ball = document.getElementById("ball");
+        var racket = document.getElementById("racket");
+        var opponentracket = document.getElementById("opponent-racket");
+        var gameContainer = document.getElementById("frame");
+        var scoreValue = document.getElementById("score-value");
+        var startButton = document.getElementById("start-button");
+        var restartButton = document.getElementById("restart-button");
+        var audio = document.getElementById("audio");
+        var audio2 = document.getElementById("audio2");
+        var chi = document.getElementById("chicken");
+
+        var x = 230; 
+        var y = 370; // 球初始坐标，特意不使其居中，增强发球真实感~
+        var dx = 2; // 
+        var dy = -2; // 横纵速度，开始先慢点。
+        var ballRadius = 10; // 球的半径
+        var racketWidth = 90; // 板的宽度
+        var speedplus = 0.15; // 每次击球速度增加0.15
+        var score = 0; // 拍数
+        var interval; // 用于存储 setInterval 的返回值
+
+        function moveBall() {//小球碰撞后的运动变化
+            //关于球的碰撞体积，作者遇到了许多意想不到的困难，最后只能使用一些修正的因子
+            //对于代码可读性的下降，特此致歉！
+            x += dx;
+            y += dy;
+            if (x + 1.5*ballRadius > gameContainer.offsetWidth || x + 0.5*ballRadius < 0) {
+                dx = -dx; // 撞到左右边界，横向反向
+            }
+            if (y - 0.5*ballRadius < 0) {
+                audio.play(audio);
+                dy = -dy; // 撞到对手板，反向
+            }
+            else if (y + 2*ballRadius > gameContainer.offsetHeight) {
+                if (x > racket.offsetLeft - 15 && x < racket.offsetLeft + racket.offsetWidth) {
+                    // 球撞到板，反向运动
+                    audio.play(audio2);
+                    dy = -dy;
+                    dx += getRandomNumber(-1, 1); // 随机改变球的水平速度，因为我不会根据拍的瞬时速度调整球的横向速度……
+                    dy += dy > 0 ? speedplus : -speedplus; // 速度逐渐加快
+                    score++; // 拍数+1
+                    scoreValue.textContent = score; // 拍数更新
+                }
+                else {
+                    clearInterval(interval);// 没接住球，游戏结束
+                    if (score >= 5) {
+                        if (score >= 15){
+                            if (score >= 30){
+                                alert("我观你骨骼精奇，国乒新星非你莫属！");
+                            }
+                            else{alert("很好，很有精神！")}
+                        }
+                        else{alert("不要灰心，再来一局吧");}
+                    }
+                    else{alert("大笨大笨！玩不了一点~");}   
+                }//不同拍数下的ending
+            }
+            ball.style.left = x + "px";
+            ball.style.top = y + "px";
+            opponentracket.style.left = x - racketWidth / 2 + "px"; // 对手板的 x 坐标与球的 x 坐标保持一致
+        }
+
+        function moveracket(event) {//拍随着鼠标移动
+            var racketX = event.clientX - gameContainer.offsetLeft - racketWidth / 2;
+            var maxracketX = gameContainer.offsetWidth - racketWidth;
+            if (racketX < -0.5 * gameContainer.offsetWidth) {
+                racketX = -0.5 * gameContainer.offsetWidth;
+            } else if (racketX > maxracketX + 0.5 * gameContainer.offsetWidth) {
+                racketX = maxracketX;
+            }
+            racket.style.left = racketX + "px";
+        }
+
+        function getRandomNumber(min, max) {//随机函数罢了
+            return Math.random() * (max - min) + min;
+        }
+
+        function startGame() {//快速发球
+            interval = setInterval(moveBall, 10);
+            startButton.disabled = true;
+        }
+
+        function restartGame() {//耻辱捡球
+            clearInterval(interval);
+            x = 230;
+            y = 370;
+            dx = 2;
+            dy = -2;
+            score = 0;
+            scoreValue.textContent = score;
+            ball.style.left = x + "px";
+            ball.style.top = y + "px";
+            racket.style.left = "250px";
+            startButton.disabled = false;
+        }
+
+        document.addEventListener("mousemove", moveracket);
+        startButton.addEventListener("click", startGame);
+        restartButton.addEventListener("click", restartGame);
+    </script>
+</body>
+</html>

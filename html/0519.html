@@ -1,0 +1,115 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>美好的一天</title>
+    </head>
+    <body>
+        <h1 style="background-color:gold;">计算机和时钟养成记</h1>
+        作者：<b><i style="color:purple;">丁真珍珠</i></b> <sup>*</sup>
+        时间：<b><i style="color:purple;">2023年5月19日</i></b>
+        <div id="before">
+        <h2>发明前</h2>
+        <p>来到GKD，就要安贫乐道。</p>
+        列表：丁真的动机
+        <ol>
+            <li>骑上心爱的小马</li>
+            <li>找回锐克五代</li>
+            <li>成为理塘之主</li>
+        </ol>
+        <br/>
+        <hr/>
+        </div>
+        <div id="during">
+        <h2>发明中</h2>
+        <p>什么，这不是GKD？这是压缩毛巾，遇水变大变高！</p>
+        <table border="11">
+            表：丁真远征计划
+            <tr>
+                <td>事件</td><td>成果</td>
+            </tr>
+            <tr>
+                <td>攻打GKD</td><td>成功攻克</td>
+            </tr>
+            <tr>
+                <td>攻打PKU</td><td>成功攻克</td>
+            </tr>
+            <tr>
+                <td>攻打THU</td><td>成功攻克</td>
+            </tr>
+            <tr>
+                <td>主持谈判</td><td>三校合并</td>
+            </tr>
+        </table>
+        <br/>
+        <hr/>
+        </div>
+        <div id="after">
+        <h2>发明后</h2>
+        <p>你说得对，但是前面忘了，中间忘了，后面也忘了……</p>
+        锐克五代计算器：
+        <form>
+            操作数1：<input type="text" id="op1"><br/>
+            操作数2：<input type="text" id="op2"><br/>
+            <input type="radio" name="op">加
+            <input type="radio" name="op">减
+            <input type="radio" name="op">乘
+            <input type="radio" name="op">除
+            <input type="radio" name="op">模
+            <br/>
+            结果：<span id="result">xxxx</span><br/>      
+            <input type="button" value="计算" onclick="run_calculator()">
+        </form>
+        Clock:
+        <p id="clock"></p>      
+    </div>
+    <script>
+        function add(x,y){ return x+y; }
+        function sub(x,y){ return x-y; }
+        function mul(x,y){ return x*y; }
+        function div(x,y){ return x/y; }
+        function mod(x,y){ return x%y; }
+        function run_calculator(){
+            var op1 = document.getElementById('op1').value - 0;
+            var op2 = document.getElementById('op2').value - 0;
+            var function_array = [add, sub, mul, div, mod];
+            var options = document.getElementsByName("op");
+            var z;
+            for(var i=0;i<function_array.length;i++){
+                if(options[i].checked==true){
+                    z=function_array[i](op1,op2);
+                    break;
+                }
+            }
+            document.getElementById("result").innerHTML=z;
+        }
+        run_clock()
+        function run_clock(){
+            var date = new Date;
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var hour = date.getHours();
+            var min = date.getMinutes();
+            var second = date.getSeconds();
+            var time = year + "/" + month + "/" + day + " " + hour + ":  " + min + ":  " + second;
+            var clock = document.getElementById("clock");
+            clock.innerHTML = time;
+            setTimeout(run_clock, 1000);
+        }
+    </script> 
+    </body>
+    </html>
+    <style>
+        #before {
+            background-color: skyblue;
+        }
+        #during {
+            background-color: springgreen;
+        }
+        #after {
+            background-color: tomato;
+        }
+        h2 {
+            background-color: violet;
+        }
+    </style>
